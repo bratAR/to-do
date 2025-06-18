@@ -40,3 +40,30 @@ function completeTask(button) {
 function toggleTask(span) {
   span.parentElement.classList.toggle("completed");
 }
+
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'en-US';
+  recognition.interimResults = false;
+
+  recognition.onresult = function(event) {
+    const transcript = event.results[0][0].transcript;
+    document.getElementById("taskInput").value = transcript;
+    addTask(); 
+  }
+
+  recognition.onerror = function(event) {
+    alert("Error recognizing speech: " + event.error);
+  }
+
+  function startListening() {
+    recognition.start();
+  }
+} else {
+  function startListening() {
+    alert("Sorry, your browser does not support speech recognition.");
+  }
+}
